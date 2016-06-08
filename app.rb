@@ -36,10 +36,25 @@ get '/meetups' do
 end
 
 get '/meetups/new' do
+  @new_meetup = Meetup.new
   erb :'meetups/new'
 end
 
+post '/meetups/new' do
+  @new_meetup = Meetup.new(name: params["name"], location: params["location"], description: params["description"], creator: current_user)
+  if @new_meetup.valid?
+    @new_meetup.save
+    flash[:notice] = "Meetup created successfully!"
+    redirect "/meetups/#{@new_meetup.id}"
+  else
+    flash[:notice] = @new_meetup.errors.full_messages
+    erb :'meetups/new'
+  end
+end
+
+
 get '/meetups/:id' do
+  @meetup_info = Meetup.find(params[:id])
   erb :'meetups/show'
 end
 
