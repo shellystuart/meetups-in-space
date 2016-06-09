@@ -38,7 +38,7 @@ end
     fill_in "Location", with: "Mars"
     click_button "Submit"
     expect(page).to have_current_path("/meetups/new")
-    expect(page).to have_content("ERRORS FILL IN AFTER DECIDING ERROR MESSAGES!")
+    expect(page).to have_content("Description can't be blank")
   end
 
   scenario "user signs in and only submits name and description" do
@@ -49,7 +49,7 @@ end
     fill_in "Description", with: "The red planet is awesome"
     click_button "Submit"
     expect(page).to have_current_path("/meetups/new")
-    expect(page).to have_content("ERRORS FILL IN AFTER DECIDING ERROR MESSAGES!")
+    expect(page).to have_content("Location can't be blank")
   end
 
   scenario "user signs in and only submits location and description" do
@@ -60,7 +60,7 @@ end
     fill_in "Description", with: "The red planet is awesome"
     click_button "Submit"
     expect(page).to have_current_path("/meetups/new")
-    expect(page).to have_content("ERRORS FILL IN AFTER DECIDING ERROR MESSAGES!")
+    expect(page).to have_content("Name can't be blank")
   end
 
   scenario "user doesn't sign in" do
@@ -70,10 +70,16 @@ end
     fill_in "Description", with: "The red planet is awesome"
     click_button "Submit"
     expect(page).to have_current_path("/meetups/new")
-    expect(page).to have_content("ERRORS FILL IN AFTER DECIDING ERROR MESSAGES!")
+    expect(page).to have_content("Creator can't be blank")
   end
 
+  scenario "form is re-rendered with previously submitted details" do
+    visit "/meetups/new"
+    fill_in "Name", with: "name"
+    click_button "Submit"
 
+    expect(page).to have_css("input[value='name']")
+  end
 
 
 end

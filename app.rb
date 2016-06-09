@@ -11,6 +11,10 @@ helpers do
   end
 end
 
+def show_join?(meetup, user)
+  !meetup.users.include?(user) && meetup.creator != user
+end
+
 get '/' do
   redirect '/meetups'
 end
@@ -47,17 +51,34 @@ post '/meetups/new' do
     flash[:notice] = "Meetup created successfully!"
     redirect "/meetups/#{@new_meetup.id}"
   else
-    flash[:notice] = @new_meetup.errors.full_messages
-    erb :'meetups/new'
+    errors = @new_meetup.errors.full_messages.first
+    count = @new_meetup.errors.full_messages.count
+    @new_meetup.errors.full_messages[1..count].each do |message|
+      errors += ", #{message}"
+    end
+    flash[:notice] = errors
+    flash[:name] = @new_meetup.name
+    flash[:location] = @new_meetup.location
+    flash[:description] = @new_meetup.description
+    redirect '/meetups/new'
   end
 end
 
 
 get '/meetups/:id' do
   @meetup_info = Meetup.find(params[:id])
+  @attendees = @meetup_info.users
   erb :'meetups/show'
 end
 
 post '/meetups/:id' do
-  redirect '/meetups/:id'
+  meetup_id = params[:id]
+  new_attendee = Attendee.new(user: current_user, meetup_id: meetup_id)
+  if new_attendee.valid?
+    new_attendee.save
+    redirect "/meetups/#{meetup_id}"
+  else
+    flash[:notice] = "Please sign in"
+    redirect "/meetups/#{meetup_id}"
+  end
 end

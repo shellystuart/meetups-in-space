@@ -2,4 +2,16 @@
 <h1><%= @meetup_info.name %></h1>
 <p>Description: <%= @meetup_info.description %></p>
 <p>Location: <%= @meetup_info.location %></p>
-<p>Creator: <%= @meetup_info.creator.username %></p>
+<p>Creator: <img src="<%= @meetup_info.creator.avatar_url %>" width="40" /> <%= @meetup_info.creator.username %></p>
+
+<ul>
+  <% @attendees.each do |user| %>
+  <li><img src="<%= user.avatar_url %>" width="40" /> <%= user.username %></li>
+  <% end %>
+</ul>
+
+<% if show_join?(@meetup_info, current_user) %>
+<form action="/meetups/<%= @meetup_info.id %>" method="post">
+  <input type="submit" value="Join">
+</form>
+<% end %>

@@ -2,10 +2,10 @@
 
 <form action="/meetups/new" method="post">
   <label for="name">Name</label>
-  <input type="text" name="name" id="name" value="<%= @new_meetup.name %>">
+  <input type="text" name="name" id="name" value="<%= flash[:name] %>">
   <label for="location">Location</label>
-  <input type="text" name="location" id="location" value="<%= @new_meetup.location %>">
+  <input type="text" name="location" id="location" value="<%= flash[:location] %>">
   <label for="description">Description</label>
-  <input type="text" name="description" id="description" value="<%= @new_meetup.description %>">
+  <input type="text" name="description" id="description" value="<%= flash[:description] %>">
   <input type="submit" value="Submit">
 </form>
